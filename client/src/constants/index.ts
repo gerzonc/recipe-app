@@ -1,4 +1,4 @@
-export const screens = {
+export const SCREENS = {
   recipeList: {
     name: "recipe-list",
     title: "Recipe List",
@@ -16,3 +16,5 @@ export const screens = {
     title: "Settings",
   },
 };
+
+export const LOAD_SIZE = 15;

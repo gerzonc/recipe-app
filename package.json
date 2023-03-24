@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "A recipe app made with Expo, tRPC and Firebase",
   "scripts": {
-    "start": "cd server && npm start",
-    "build": "cd server && npm run build",
-    "test": "cd server && npm test",
-    "lint": "cd server && npm run lint",
+    "start-server": "cd server && npm start",
+    "build-server": "cd server && npm run build",
+    "test-server": "cd server && npm test",
+    "lint-server": "cd server && npm run lint",
+    "lint:fix-server": "cd server && npm run lint:fix",
     "start-client": "cd client && npm start",
-    "build-client": "cd client && npm run build",
-    "test-client": "cd client && npm test",
-    "lint-client": "cd client && npm run lint"
+    "ios-client": "cd client && npm run ios",
+    "android-client": "cd client && npm run android",
+    "web-client": "cd client && npm run web"
   }
 }

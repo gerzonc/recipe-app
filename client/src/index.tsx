@@ -2,8 +2,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import React, { useState } from "react";
-import { RootStack } from "./navigation";
 
+import { RootStack } from "./navigation";
 import { trpc } from "./utils/trpc";
 
 const App = () => {
@@ -12,7 +12,7 @@ const App = () => {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: "http://localhost:5000/trpc",
+          url: "http://localhost:3000/trpc",
         }),
       ],
     })

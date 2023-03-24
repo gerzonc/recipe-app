@@ -12,23 +12,26 @@ export const router = t.router({
   getRecipeList: t.procedure
     .input(fetchRecipes)
     .query(async ({ input: { offset = 0, limit = 15 } }) => {
-      const snapshot = await recipesRef
-        .orderByKey()
-        .startAt("")
-        .limitToFirst(offset + limit)
-        .once("value");
-      const recipes = [];
+      try {
+        const snapshot = await recipesRef
+          .orderByKey()
+          .limitToFirst(offset + limit)
+          .once("value");
 
-      snapshot.forEach((childSnapshot) => {
-        if (recipes.length >= limit) {
-          return true; // Stop iterating
-        }
-        if (childSnapshot.key && childSnapshot.val()) {
-          recipes.push({ id: childSnapshot.key, ...childSnapshot.val() });
-        }
-      });
+        const recipes = [];
 
-      return recipes;
+        snapshot.forEach((childSnapshot) => {
+          if (recipes.length >= limit) {
+            return true; // Stop iterating
+          }
+          if (childSnapshot.key && childSnapshot.val()) {
+            recipes.push({ id: childSnapshot.key, ...childSnapshot.val() });
+          }
+        });
+        return recipes;
+      } catch (error) {
+        throw new Error(`Failed to get recipe list: ${error.message}`);
+      }
     }),
   // Create a recipe
   createRecipe: t.procedure
