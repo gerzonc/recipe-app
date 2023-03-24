@@ -1,0 +1,15 @@
+{
+  "name": "recipe-app",
+  "version": "1.0.0",
+  "description": "A recipe app made with Expo, tRPC and Firebase",
+  "scripts": {
+    "start": "cd server && npm start",
+    "build": "cd server && npm run build",
+    "test": "cd server && npm test",
+    "lint": "cd server && npm run lint",
+    "start-client": "cd client && npm start",
+    "build-client": "cd client && npm run build",
+    "test-client": "cd client && npm test",
+    "lint-client": "cd client && npm run lint"
+  }
+}
