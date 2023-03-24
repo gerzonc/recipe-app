@@ -5,16 +5,10 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import config from "./config";
 import { router } from "./routers";
 
-// Initialize Firebase
-admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
-  databaseURL: config.databaseURL,
-});
-
 // Create Express app
 const app = express();
 
-// Add routes
+// Add tRPC middleware
 app.use("/trpc", createExpressMiddleware({ router }));
 
 // Start server
