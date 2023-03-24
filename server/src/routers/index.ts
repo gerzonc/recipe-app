@@ -7,6 +7,7 @@ import { FirebaseService } from "../services/firebaseService";
 
 const db = FirebaseService.instance.db;
 const recipesRef = db.ref("recipes");
+const recipeRef = db.ref("recipe");
 
 // Defined CRUD operations
 export const router = t.router({
@@ -41,7 +42,7 @@ export const router = t.router({
     .input(z.number())
     .query(async ({ input: id }) => {
       try {
-        const snapshot = await recipesRef
+        const snapshot = await recipeRef
           .orderByChild("id")
           .equalTo(id)
           .once("value");
@@ -49,7 +50,6 @@ export const router = t.router({
           return null;
         }
         return snapshot.val();
-        // return recipeDetail.parse(snapshot.val());
       } catch (error) {
         console.error(error);
         throw new Error("Failed to fetch recipe detail");
