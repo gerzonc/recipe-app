@@ -18,7 +18,8 @@ export const router = t.router({
       try {
         const snapshot = await recipesRef
           .orderByChild("id")
-          .limitToFirst(offset + limit)
+          .startAt(offset)
+          .limitToFirst(limit)
           .once("value");
 
         const recipes = [];
@@ -27,6 +28,7 @@ export const router = t.router({
           if (recipes.length >= limit) {
             return true; // Stop iterating
           }
+
           if (childSnapshot.key && childSnapshot.val()) {
             recipes.push({ id: childSnapshot.key, ...childSnapshot.val() });
           }
