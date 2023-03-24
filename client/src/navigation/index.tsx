@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
+import { screens } from "../constants";
 
 import {
   AddRecipeModal,
@@ -12,9 +13,25 @@ const Stack = createNativeStackNavigator();
 
 export const RootStack = () => (
   <Stack.Navigator screenOptions={{ headerLargeTitle: true }}>
-    <Stack.Screen name="recipe-list" component={RecipeListScreen} />
-    <Stack.Screen name="add-recipe" component={AddRecipeModal} />
-    <Stack.Screen name="recipe-detail" component={RecipeDetailScreen} />
-    <Stack.Screen name="settings" component={SettingScreen} />
+    <Stack.Screen
+      name={screens.recipeList.name}
+      component={RecipeListScreen}
+      options={{ headerTitle: screens.recipeList.title }}
+    />
+    <Stack.Screen
+      name={screens.addRecipe.name}
+      component={AddRecipeModal}
+      options={{ headerTitle: screens.addRecipe.name, presentation: "modal" }}
+    />
+    <Stack.Screen
+      name={screens.recipeDetail.name}
+      component={RecipeDetailScreen}
+      options={{ headerShown: false }}
+    />
+    <Stack.Screen
+      name={screens.settings.name}
+      component={SettingScreen}
+      options={{ headerTitle: screens.settings.title, headerLargeTitle: false }}
+    />
   </Stack.Navigator>
 );
