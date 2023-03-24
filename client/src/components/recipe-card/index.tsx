@@ -1,4 +1,4 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, StyleSheet, PixelRatio } from "react-native";
 import React from "react";
 import { FontAwesome as Icon } from "@expo/vector-icons";
 
@@ -10,47 +10,64 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ recipe }) => {
   return (
-    <View
-      style={{
-        flex: 1,
-        marginBottom: 12,
-        marginHorizontal: 16,
-        borderRadius: 15,
-        backgroundColor: "#F4F5F6",
-        alignItems: "center",
-        padding: 8,
-      }}
-    >
+    <View style={styles.container}>
       <Image
         source={{ uri: recipe.image }}
-        style={{
-          width: "100%",
-          height: 120,
-          borderRadius: 15,
-        }}
+        style={styles.image}
         resizeMode="cover"
       />
-      <View style={{ padding: 12 }}>
-        <Text style={{ fontSize: 18, fontWeight: "bold", marginBottom: 8 }}>
-          {recipe.title}
-        </Text>
-        <Text style={{ fontSize: 15, marginBottom: 8 }} numberOfLines={2}>
+      <View style={styles.content}>
+        <Text style={styles.title}>{recipe.title}</Text>
+        <Text style={styles.description} numberOfLines={2}>
           {`${recipe.description.slice(0, 60)}...`}
         </Text>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Icon
-            name="clock-o"
-            size={20}
-            color="#0D0E0B"
-            style={{ marginRight: 8 }}
-          />
-          <Text
-            style={{ fontSize: 14, color: "#0D0E0B", fontWeight: "bold" }}
-          >{`${recipe.preparationTime / 60} minutes`}</Text>
+        <View style={styles.info}>
+          <Icon name="clock-o" size={20} color="#0D0E0B" />
+          <Text style={styles.time}>{`${
+            recipe.preparationTime / 60
+          } minutes`}</Text>
         </View>
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    marginBottom: 12,
+    marginHorizontal: 16,
+    borderRadius: 15,
+    backgroundColor: "#F4F5F6",
+    alignItems: "center",
+    padding: 8,
+  },
+  image: {
+    width: "100%",
+    height: PixelRatio.roundToNearestPixel(120),
+    borderRadius: 15,
+  },
+  content: {
+    padding: 12,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  description: {
+    fontSize: 15,
+    marginBottom: 8,
+  },
+  info: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  time: {
+    fontSize: 14,
+    color: "#0D0E0B",
+    fontWeight: "bold",
+    marginLeft: 8,
+  },
+});
 
 export default Card;
