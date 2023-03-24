@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const AddRecipeScreen = () => {
+const SettingScreen = () => {
   return (
     <View>
-      <Text>AddRecipeScreen</Text>
+      <Text>SettingScreen</Text>
     </View>
   );
 };
 
-export default AddRecipeScreen;
+export default SettingScreen;
