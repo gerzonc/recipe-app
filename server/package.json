@@ -4,10 +4,10 @@
   "description": "",
   "main": "src/index.ts",
   "scripts": {
-    "start": "node server/index.ts",
+    "start": "npm run build && node dist/index.js",
+    "build": "rimraf ./dist && tsc",
     "test": "jest",
     "test:watch": "jest --watch",
-    "build": "tsc",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

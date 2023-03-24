@@ -1,17 +1,17 @@
-import * as admin from "firebase-admin";
-
 import { t } from "../trpc";
 import { recipe } from "../schemas/recipe";
 import { fetchRecipes } from "../schemas/recipes";
+import { FirebaseService } from "../services/firebaseService";
 
-const db = admin.database();
+const db = FirebaseService.instance.db;
 const recipesRef = db.ref("recipes");
 
 // Defined CRUD operations
 export const router = t.router({
+  // Get list of recipes
   getRecipeList: t.procedure
     .input(fetchRecipes)
-    .query(async ({ input: { offset = 0, limit = 10 } }) => {
+    .query(async ({ input: { offset = 0, limit = 15 } }) => {
       const snapshot = await recipesRef
         .orderByKey()
         .startAt("")
