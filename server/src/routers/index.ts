@@ -58,3 +58,6 @@ export const router = t.router({
       return { id: snapshot.key!, ...recipe };
     }),
 });
+
+// Export type router type signature
+export type AppRouter = typeof router;
