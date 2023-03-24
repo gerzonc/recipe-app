@@ -3,14 +3,17 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { trpc } from "../../utils/trpc";
 import { LOAD_SIZE } from "../../constants";
+import { Recipe } from "../../types";
+import { RecipeCard } from "../../components";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const RecipeListScreen = () => {
   const [offset, setOffset] = useState(0);
   const [limit, setLimit] = useState(LOAD_SIZE);
-
   const [total, setTotal] = useState(0);
   const [recipeList, setRecipeList] = useState<any>([]);
   const [hasMore, setHasMore] = useState(true);
+  const { top } = useSafeAreaInsets();
 
   const { data, isLoading, refetch } = trpc.getRecipeList.useQuery({
     offset,
@@ -40,13 +43,12 @@ const RecipeListScreen = () => {
     }
   }, [hasMore, isLoading, offset, limit, recipeList.length, total]);
 
-  const renderItem = ({ item, index }: { item: any; index: number }) => {
-    return (
-      <View key={index} style={{ padding: 16 }}>
-        <Text>{item.title}</Text>
-      </View>
-    );
-  };
+  const renderItem = useCallback(
+    ({ item, index }: { item: Recipe & { id: number }; index: number }) => {
+      return <RecipeCard key={index} recipe={item} />;
+    },
+    []
+  );
 
   const renderFooter = useCallback(() => {
     if (hasMore && isLoading)
@@ -59,16 +61,15 @@ const RecipeListScreen = () => {
   }, []);
 
   return (
-    <View style={{ marginTop: 160 }}>
-      <FlatList
-        data={recipeList}
-        renderItem={renderItem}
-        keyExtractor={(recipe) => recipe.id.toString()}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={renderFooter}
-      />
-    </View>
+    <FlatList
+      contentInset={{ top: 132 }}
+      data={recipeList}
+      renderItem={renderItem}
+      keyExtractor={(recipe) => recipe.id.toString()}
+      onEndReached={handleLoadMore}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={renderFooter}
+    />
   );
 };
 
