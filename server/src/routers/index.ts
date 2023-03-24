@@ -1,5 +1,7 @@
+import { z } from "zod";
+
 import { t } from "../trpc";
-import { recipe } from "../schemas/recipe";
+import { recipe, recipeDetail } from "../schemas/recipe";
 import { fetchRecipes } from "../schemas/recipes";
 import { FirebaseService } from "../services/firebaseService";
 
@@ -14,7 +16,7 @@ export const router = t.router({
     .query(async ({ input: { offset = 0, limit = 15 } }) => {
       try {
         const snapshot = await recipesRef
-          .orderByKey()
+          .orderByChild("id")
           .limitToFirst(offset + limit)
           .once("value");
 
@@ -28,9 +30,29 @@ export const router = t.router({
             recipes.push({ id: childSnapshot.key, ...childSnapshot.val() });
           }
         });
+
         return recipes;
       } catch (error) {
         throw new Error(`Failed to get recipe list: ${error.message}`);
+      }
+    }),
+  // Recipe detail
+  getRecipeDetail: t.procedure
+    .input(z.number())
+    .query(async ({ input: id }) => {
+      try {
+        const snapshot = await recipesRef
+          .orderByChild("id")
+          .equalTo(id)
+          .once("value");
+        if (!snapshot.exists()) {
+          return null;
+        }
+        return snapshot.val();
+        // return recipeDetail.parse(snapshot.val());
+      } catch (error) {
+        console.error(error);
+        throw new Error("Failed to fetch recipe detail");
       }
     }),
   // Create a recipe

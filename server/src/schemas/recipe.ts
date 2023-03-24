@@ -14,4 +14,13 @@ export const recipe = z.object({
     .transform((val) => val * 1000),
 });
 
+export const recipeDetail = z.object({
+  id: z.number(),
+  title: z.string(),
+  image: z.string(),
+  description: z.string(),
+  instructions: z.string(),
+  preparationTime: z.number(),
+});
+
 export const fetchRecipe = z.string();
