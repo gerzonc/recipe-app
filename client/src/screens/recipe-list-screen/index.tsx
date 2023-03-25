@@ -8,17 +8,22 @@ import {
   TextInputFocusEventData,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import ContextMenu, {
   ContextMenuOnPressNativeEvent,
 } from "react-native-context-menu-view";
 import { FlashList } from "@shopify/flash-list";
+import { FontAwesome as Icon } from "@expo/vector-icons";
 
 import { menuItems } from "./context-menu";
 import { RecipeCard } from "../../components";
 import { Recipe } from "../../types";
-import { LOAD_SIZE } from "../../constants";
+import { LOAD_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH } from "../../constants";
 import { trpc } from "../../utils/trpc";
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from "@gorhom/bottom-sheet";
 
 const RecipeListScreen = ({ navigation }: any) => {
   const [searchText, setSearchText] = useState("");
@@ -29,6 +34,7 @@ const RecipeListScreen = ({ navigation }: any) => {
   const [recipeList, setRecipeList] = useState<Array<Recipe & { id: number }>>(
     []
   );
+  const bottomSheetRef = useRef<BottomSheetModal>(null);
   const { data, isLoading, isRefetching, refetch } =
     trpc.getRecipeList.useQuery(
       {
@@ -108,8 +114,17 @@ const RecipeListScreen = ({ navigation }: any) => {
     }
   };
 
+  const handleSnapToIndex = useCallback((index: number) => {
+    bottomSheetRef.current?.present();
+  }, []);
+
   useEffect(() => {
     navigation.setOptions({
+      headerRight: () => (
+        <Pressable onPress={() => handleSnapToIndex(1)}>
+          <Icon name="ellipsis-v" size={20} />
+        </Pressable>
+      ),
       headerSearchBarOptions: {
         onSearchButtonPress: handleSearchBarPress,
         onCancelButtonPress: handleSearchBarPress,
@@ -148,6 +163,21 @@ const RecipeListScreen = ({ navigation }: any) => {
       });
     }
   }, [hasMore, isLoading, offset, limit, recipeList.length, total]);
+
+  const renderBackdrop = () => (
+    <Pressable
+      style={{
+        position: "absolute",
+        height: SCREEN_HEIGHT,
+        width: SCREEN_WIDTH,
+        backgroundColor: "#0D0E0B",
+        opacity: 0.4,
+      }}
+      onPress={() => {
+        bottomSheetRef.current?.close();
+      }}
+    />
+  );
 
   const renderItem = ({
     item,
@@ -188,19 +218,33 @@ const RecipeListScreen = ({ navigation }: any) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlashList
-        data={recipeList}
-        estimatedItemSize={200}
-        renderItem={renderItem}
-        removeClippedSubviews
-        contentContainerStyle={styles.listContent}
-        keyExtractor={(recipe) => recipe.id.toString()}
-        onEndReached={loadMore}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={renderFooter}
-      />
-    </SafeAreaView>
+    <BottomSheetModalProvider>
+      <SafeAreaView style={styles.container}>
+        <BottomSheetModal
+          enablePanDownToClose
+          backdropComponent={renderBackdrop}
+          ref={bottomSheetRef}
+          index={0}
+          snapPoints={["35%"]}
+          containerStyle={styles.bottomSheetContainer}
+        >
+          <View></View>
+        </BottomSheetModal>
+        <FlashList
+          data={recipeList}
+          estimatedItemSize={200}
+          contentInsetAdjustmentBehavior="automatic"
+          renderItem={renderItem}
+          stickyHeaderHiddenOnScroll={false}
+          removeClippedSubviews
+          contentContainerStyle={styles.listContent}
+          keyExtractor={(recipe) => recipe.id.toString()}
+          onEndReached={loadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={renderFooter}
+        />
+      </SafeAreaView>
+    </BottomSheetModalProvider>
   );
 };
 
@@ -209,6 +253,9 @@ export default RecipeListScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  bottomSheetContainer: {
+    zIndex: 3,
   },
   listContent: {
     paddingTop: 16,
