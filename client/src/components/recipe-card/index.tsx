@@ -5,11 +5,11 @@ import { FontAwesome as Icon } from "@expo/vector-icons";
 import { Recipe } from "../../types";
 import { formatTime } from "../../utils/formatTime";
 
-interface CardProps {
+interface RecipeCardProps {
   recipe: Recipe;
 }
 
-const Card: React.FC<CardProps> = ({ recipe }) => {
+const RecipeCard: React.FC<RecipeCardProps> = ({ recipe }) => {
   const prepTimeFormatted = formatTime(recipe.preparationTime);
   return (
     <View style={styles.container}>
@@ -70,4 +70,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Card;
+export default RecipeCard;
