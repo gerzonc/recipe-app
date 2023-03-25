@@ -38,7 +38,7 @@ const RecipeDetailScreen = () => {
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ["72%", "95%"], []);
-  const { data, isLoading } = trpc.getRecipeDetail.useQuery(id);
+  const { data } = trpc.getRecipeDetail.useQuery(id);
 
   const renderScene = SceneMap({
     // @ts-ignore
