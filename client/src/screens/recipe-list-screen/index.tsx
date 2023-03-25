@@ -1,25 +1,26 @@
 import {
   ActivityIndicator,
   Alert,
-  FlatList,
   NativeSyntheticEvent,
   SafeAreaView,
   StyleSheet,
+  TextInputFocusEventData,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import ContextMenu, {
+  ContextMenuOnPressNativeEvent,
+} from "react-native-context-menu-view";
+import { FlashList } from "@shopify/flash-list";
 
+import { menuItems } from "./context-menu";
 import { RecipeCard } from "../../components";
 import { Recipe } from "../../types";
 import { LOAD_SIZE } from "../../constants";
 import { trpc } from "../../utils/trpc";
-import { useNavigation } from "@react-navigation/native";
-import ContextMenu, {
-  ContextMenuOnPressNativeEvent,
-} from "react-native-context-menu-view";
-import { menuItems } from "./context-menu";
 
-const RecipeListScreen = () => {
+const RecipeListScreen = ({ navigation }: any) => {
+  const [searchText, setSearchText] = useState("");
   const [limit, setLimit] = useState(LOAD_SIZE);
   const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0);
@@ -27,7 +28,12 @@ const RecipeListScreen = () => {
   const [recipeList, setRecipeList] = useState<Array<Recipe & { id: number }>>(
     []
   );
-  const navigation = useNavigation<any>();
+  const { data, isLoading, isRefetching, refetch } =
+    trpc.getRecipeList.useQuery({
+      offset,
+      limit,
+      search: searchText,
+    });
 
   const handleDeleteButtonPress = () =>
     Alert.alert("Delete", "Are you sure you want to delete this recipe?", [
@@ -43,6 +49,18 @@ const RecipeListScreen = () => {
       },
     ]);
 
+  const handleSearchBarPress = (
+    event: NativeSyntheticEvent<TextInputFocusEventData>
+  ) => {
+    const { text } = event.nativeEvent;
+    setSearchText(text);
+    setOffset(0);
+    setLimit(LOAD_SIZE);
+    setRecipeList([]);
+    setHasMore(true);
+    refetch();
+  };
+
   const handleContextMenu = (
     event: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>
   ) => {
@@ -57,10 +75,14 @@ const RecipeListScreen = () => {
     }
   };
 
-  const { data, isLoading, refetch } = trpc.getRecipeList.useQuery({
-    offset,
-    limit,
-  });
+  useEffect(() => {
+    navigation.setOptions({
+      headerSearchBarOptions: {
+        onSearchButtonPress: handleSearchBarPress,
+        onCancelButtonPress: handleSearchBarPress,
+      },
+    });
+  }, [offset, limit, searchText, refetch]);
 
   useEffect(() => {
     if (data) {
@@ -77,7 +99,7 @@ const RecipeListScreen = () => {
         setHasMore(false);
       }
     }
-  }, [data]);
+  }, [data, searchText]);
 
   const loadMore = useCallback(() => {
     if (hasMore && !isLoading) {
@@ -113,10 +135,19 @@ const RecipeListScreen = () => {
     return null;
   }, [hasMore, isLoading]);
 
+  if (isRefetching) {
+    return (
+      <SafeAreaView>
+        <ActivityIndicator />
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
+      <FlashList
         data={recipeList}
+        estimatedItemSize={200}
         renderItem={renderItem}
         removeClippedSubviews
         contentContainerStyle={styles.listContent}
@@ -137,7 +168,6 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingTop: 16,
-    marginBottom: 32,
   },
   footerContainer: {
     paddingVertical: 20,
