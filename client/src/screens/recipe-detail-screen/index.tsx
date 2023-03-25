@@ -37,7 +37,7 @@ const RecipeDetailScreen = () => {
   ]);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ["72%", "88%"], []);
+  const snapPoints = useMemo(() => ["72%", "95%"], []);
   const { data, isLoading } = trpc.getRecipeDetail.useQuery(id);
 
   const renderScene = SceneMap({
@@ -56,10 +56,6 @@ const RecipeDetailScreen = () => {
         }>;
       }
     ) => {
-      const {
-        navigationState: { index: currentIndex },
-      } = props;
-
       return (
         <TabBar
           {...props}
