@@ -12,7 +12,18 @@ import {
 const Stack = createNativeStackNavigator();
 
 export const RootStack = () => (
-  <Stack.Navigator screenOptions={{ headerLargeTitle: true }}>
+  <Stack.Navigator
+    screenOptions={{
+      headerLargeTitle: true,
+      headerSearchBarOptions: {
+        hideWhenScrolling: true,
+        autoCapitalize: "none",
+      },
+      contentStyle: {
+        backgroundColor: "#BDC0BF",
+      },
+    }}
+  >
     <Stack.Screen
       name={SCREENS.recipeList.name}
       component={RecipeListScreen}

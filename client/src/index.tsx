@@ -1,7 +1,9 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
+import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
+import { Platform } from "react-native";
 
 import { RootStack } from "./navigation";
 import { trpc } from "./utils/trpc";
@@ -12,7 +14,10 @@ const App = () => {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: "http://localhost:3000/trpc",
+          url:
+            Platform.OS === "ios"
+              ? "http://localhost:3000/trpc"
+              : "http://192.168.100.8:3000/trpc",
         }),
       ],
     })
@@ -21,6 +26,7 @@ const App = () => {
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <NavigationContainer>
+          <StatusBar style={"dark"} />
           <RootStack />
         </NavigationContainer>
       </QueryClientProvider>

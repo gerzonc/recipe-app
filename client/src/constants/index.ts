@@ -1,7 +1,7 @@
 export const SCREENS = {
   recipeList: {
     name: "recipe-list",
-    title: "Recipe List",
+    title: "Recipes",
   },
   recipeDetail: {
     name: "recipe-detail",
