@@ -15,6 +15,10 @@ export const RootStack = () => (
   <Stack.Navigator
     screenOptions={{
       headerLargeTitle: true,
+      headerSearchBarOptions: {
+        hideWhenScrolling: true,
+        autoCapitalize: "none",
+      },
       contentStyle: {
         backgroundColor: "#BDC0BF",
       },

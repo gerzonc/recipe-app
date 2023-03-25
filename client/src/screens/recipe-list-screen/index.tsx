@@ -12,7 +12,7 @@ import { Recipe } from "../../types";
 import { LOAD_SIZE } from "../../constants";
 import { trpc } from "../../utils/trpc";
 
-const RecipeListScreen = (): JSX.Element => {
+const RecipeListScreen = () => {
   const [limit, setLimit] = useState(LOAD_SIZE);
   const [offset, setOffset] = useState(0);
   const [total, setTotal] = useState(0);
@@ -64,11 +64,11 @@ const RecipeListScreen = (): JSX.Element => {
     };
   }, []);
 
-  const renderFooter = useCallback((): JSX.Element | null => {
+  const renderFooter = useCallback(() => {
     if (hasMore && isLoading) {
       return (
         <View style={styles.footerContainer}>
-          <ActivityIndicator color="#999999" />
+          <ActivityIndicator color="#F4F5F6" />
         </View>
       );
     }
