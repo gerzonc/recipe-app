@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { t } from "../trpc";
-import { recipe, recipeDetail } from "../schemas/recipe";
+import { recipe } from "../schemas/recipe";
 import { fetchRecipes } from "../schemas/recipes";
 import { FirebaseService } from "../services/firebaseService";
 
@@ -49,7 +49,7 @@ export const router = t.router({
         throw new Error(`Failed to get recipe list: ${error.message}`);
       }
     }),
-  // Recipe detail
+  // Get recipe detail by ID
   getRecipeDetail: t.procedure
     .input(z.number())
     .query(async ({ input: id }) => {
@@ -98,6 +98,26 @@ export const router = t.router({
       const snapshot = await newRecipeRef.once("value");
 
       return { id: snapshot.key!, ...recipe };
+    }),
+  // Delete a recipe by ID
+  deleteRecipe: t.procedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input: { id } }) => {
+      try {
+        await recipesRef
+          .orderByChild("id")
+          .equalTo(id)
+          .once("value", (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+              childSnapshot.ref.remove();
+            });
+          });
+
+        return id;
+      } catch (error) {
+        console.error(error);
+        throw new Error("Failed to delete recipe");
+      }
     }),
 });
 
