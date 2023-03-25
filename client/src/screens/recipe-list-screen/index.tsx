@@ -8,7 +8,7 @@ import {
   TextInputFocusEventData,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ContextMenu, {
   ContextMenuOnPressNativeEvent,
 } from "react-native-context-menu-view";
@@ -19,7 +19,6 @@ import { RecipeCard } from "../../components";
 import { Recipe } from "../../types";
 import { LOAD_SIZE } from "../../constants";
 import { trpc } from "../../utils/trpc";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const RecipeListScreen = ({ navigation }: any) => {
   const [searchText, setSearchText] = useState("");
@@ -68,6 +67,7 @@ const RecipeListScreen = ({ navigation }: any) => {
       id: recipeList[index].id,
       title: recipeList[index].title,
       description: recipeList[index].description,
+      preparationTime: recipeList[index].preparationTime,
       image: recipeList[index].image,
     });
   };

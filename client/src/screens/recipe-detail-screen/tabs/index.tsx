@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 interface ITabsProps {
   values: string[];
@@ -10,11 +11,17 @@ const Tabs: React.FC<ITabsProps> = ({ values }) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      {values.map((value) => (
-        <Text style={styles.value}>{value}</Text>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      style={styles.container}
+      contentContainerStyle={styles.contentContainer}
+    >
+      {values.map((value, index) => (
+        <View style={styles.valueContainer} key={index}>
+          <Text style={styles.value}>{value}</Text>
+        </View>
       ))}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -22,9 +29,33 @@ export default Tabs;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
+    width: "100%",
+    height: 60,
+    paddingHorizontal: 16,
+  },
+  contentContainer: {
+    width: "100%",
+  },
+  valueContainer: {
+    borderRadius: 6,
+    marginVertical: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: "white",
+    shadowColor: "#0D0E0B",
+    shadowOffset: {
+      width: 2,
+      height: 4,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 3.84,
+    elevation: 4,
+    zIndex: 5,
   },
   value: {
     fontSize: 15,
+    fontWeight: "bold",
+    marginBottom: 8,
   },
 });
