@@ -39,6 +39,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     borderRadius: 15,
     padding: 8,
+    shadowColor: "#0D0E0B",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   image: {
     borderRadius: 15,

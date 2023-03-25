@@ -35,7 +35,7 @@ export const router = t.router({
           }
 
           const recipe = { id: childSnapshot.key, ...childSnapshot.val() };
-          console.log({ recipe });
+
           if (
             !search ||
             recipe.title.toLowerCase().includes(search.toLowerCase())
@@ -58,10 +58,15 @@ export const router = t.router({
           .orderByChild("id")
           .equalTo(id)
           .once("value");
+
         if (!snapshot.exists()) {
           return null;
         }
-        return snapshot.val();
+
+        const recipeData = snapshot.val();
+        const recipe = Object.values(recipeData)[0];
+
+        return recipe;
       } catch (error) {
         console.error(error);
         throw new Error("Failed to fetch recipe detail");

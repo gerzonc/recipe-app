@@ -26,5 +26,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#F4F5F6",
     justifyContent: "center",
     alignItems: "center",
+    shadowColor: "#0D0E0B",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
