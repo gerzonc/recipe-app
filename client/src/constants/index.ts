@@ -1,3 +1,7 @@
+import { Dimensions } from "react-native";
+
+const { width, height } = Dimensions.get("screen");
+
 export const SCREENS = {
   recipeList: {
     name: "recipe-list",
@@ -18,3 +22,5 @@ export const SCREENS = {
 };
 
 export const LOAD_SIZE = 15;
+export const SCREEN_WIDTH = width;
+export const SCREEN_HEIGHT = height;
