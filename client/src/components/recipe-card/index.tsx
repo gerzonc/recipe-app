@@ -3,12 +3,14 @@ import React from "react";
 import { FontAwesome as Icon } from "@expo/vector-icons";
 
 import { Recipe } from "../../types";
+import { formatTime } from "../../utils/formatTime";
 
 interface CardProps {
   recipe: Recipe;
 }
 
 const Card: React.FC<CardProps> = ({ recipe }) => {
+  const prepTimeFormatted = formatTime(recipe.preparationTime);
   return (
     <View style={styles.container}>
       <Image
@@ -23,9 +25,7 @@ const Card: React.FC<CardProps> = ({ recipe }) => {
         </Text>
         <View style={styles.info}>
           <Icon name="clock-o" size={20} color="#0D0E0B" />
-          <Text style={styles.time}>{`${
-            recipe.preparationTime / 60
-          } minutes`}</Text>
+          <Text style={styles.time}>{prepTimeFormatted}</Text>
         </View>
       </View>
     </View>
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
   info: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "flex-end",
   },
   time: {
     marginLeft: 8,

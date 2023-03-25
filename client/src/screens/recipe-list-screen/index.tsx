@@ -80,6 +80,7 @@ const RecipeListScreen = () => {
       <FlatList
         data={recipeList}
         renderItem={renderItem}
+        removeClippedSubviews
         contentContainerStyle={styles.listContent}
         keyExtractor={(recipe) => recipe.id.toString()}
         onEndReached={loadMore}
