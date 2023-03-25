@@ -1,4 +1,4 @@
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useCallback, useMemo, useRef, useState } from "react";
@@ -41,8 +41,8 @@ const RecipeDetailScreen = () => {
   const { data, isLoading } = trpc.getRecipeDetail.useQuery(id);
 
   const renderScene = SceneMap({
-    first: () => <Tabs values={data?.ingredients} />,
-    second: () => <Tabs values={data?.instructions} />,
+    first: () => <Tabs values={(data as any).ingredients} />,
+    second: () => <Tabs values={(data as any).instructions} />,
   });
 
   const renderTabBar = useCallback(
@@ -56,28 +56,11 @@ const RecipeDetailScreen = () => {
     ) => (
       <TabBar
         {...props}
-        tabStyle={{ height: 60, alignSelf: "center" }}
-        labelStyle={{ textTransform: "capitalize" }}
-        indicatorStyle={{
-          height: 50,
-          top: 6,
-          bottom: 6,
-          left: 6,
-          width: 155,
-          backgroundColor: "#0F8E6F",
-          alignSelf: "center",
-          borderRadius: 15,
-        }}
-        style={{
-          backgroundColor: "#BDC0BF",
-          borderRadius: 20,
-          width: "100%",
-          marginBottom: 16,
-        }}
-        indicatorContainerStyle={{
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        style={styles.tabBar}
+        tabStyle={styles.tabStyle}
+        labelStyle={styles.labelStyle}
+        indicatorStyle={styles.indicatorStyle}
+        indicatorContainerStyle={styles.indicatorContainerStyle}
       />
     ),
     []
@@ -174,9 +157,32 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 12,
   },
-  pagerView: {
-    backgroundColor: "red",
-    flex: 1,
+  tabBar: {
+    backgroundColor: "#BDC0BF",
+    borderRadius: 20,
+    width: "100%",
+    marginBottom: 16,
+  },
+  tabStyle: {
+    height: 60,
+    alignSelf: "center",
+  },
+  labelStyle: {
+    textTransform: "capitalize",
+  },
+  indicatorStyle: {
+    height: 50,
+    top: 6,
+    bottom: 6,
+    left: 6,
+    width: 155,
+    backgroundColor: "#0F8E6F",
+    alignSelf: "center",
+    borderRadius: 15,
+  },
+  indicatorContainerStyle: {
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
