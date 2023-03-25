@@ -1,9 +1,9 @@
 const units = [
-  { unit: "year", seconds: 60 * 60 * 24 * 365 },
+  { unit: "yr", seconds: 60 * 60 * 24 * 365 },
   { unit: "day", seconds: 60 * 60 * 24 },
-  { unit: "hour", seconds: 60 * 60 },
-  { unit: "minute", seconds: 60 },
-  { unit: "second", seconds: 1 },
+  { unit: "hr", seconds: 60 * 60 },
+  { unit: "min", seconds: 60 },
+  { unit: "sec", seconds: 1 },
 ];
 
 /**
@@ -29,5 +29,5 @@ export const formatTime = (seconds: number): string => {
       return `${value} ${unit}${plural}`;
     }
   }
-  return `${seconds} second${seconds !== 1 ? "s" : ""}`;
+  return `${seconds} sec${seconds !== 1 ? "s" : ""}`;
 };
