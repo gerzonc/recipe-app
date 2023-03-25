@@ -35,8 +35,9 @@ const RecipeListScreen = ({ navigation }: any) => {
       limit,
       search: searchText,
     });
+  const mutation = trpc.deleteRecipe.useMutation();
 
-  const handleDeleteButtonPress = () =>
+  const handleDeleteButtonPress = (index: number) =>
     Alert.alert("Delete", "Are you sure you want to delete this recipe?", [
       {
         text: "Cancel",
@@ -45,7 +46,15 @@ const RecipeListScreen = ({ navigation }: any) => {
       },
       {
         text: "Delete",
-        onPress: () => {},
+        onPress: () => {
+          mutation.mutate({ id: recipeList[index].id });
+
+          setOffset(0);
+          setLimit(LOAD_SIZE);
+          setRecipeList([]);
+          setHasMore(true);
+          refetch();
+        },
         style: "destructive",
       },
     ]);
@@ -82,7 +91,7 @@ const RecipeListScreen = ({ navigation }: any) => {
       case "Edit":
         return () => {};
       case "Delete":
-        return handleDeleteButtonPress();
+        return handleDeleteButtonPress(index);
     }
   };
 

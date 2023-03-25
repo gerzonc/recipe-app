@@ -41,8 +41,10 @@ const RecipeDetailScreen = () => {
   const { data, isLoading } = trpc.getRecipeDetail.useQuery(id);
 
   const renderScene = SceneMap({
-    first: () => <Tabs values={(data as any).ingredients} />,
-    second: () => <Tabs values={(data as any).instructions} />,
+    // @ts-ignore
+    first: () => <Tabs values={data?.ingredients} />,
+    // @ts-ignore
+    second: () => <Tabs values={data?.instructions} />,
   });
 
   const renderTabBar = useCallback(
@@ -53,17 +55,30 @@ const RecipeDetailScreen = () => {
           title: string;
         }>;
       }
-    ) => (
-      <TabBar
-        {...props}
-        style={styles.tabBar}
-        tabStyle={styles.tabStyle}
-        labelStyle={styles.labelStyle}
-        indicatorStyle={styles.indicatorStyle}
-        indicatorContainerStyle={styles.indicatorContainerStyle}
-      />
-    ),
-    []
+    ) => {
+      const {
+        navigationState: { index: currentIndex },
+      } = props;
+
+      return (
+        <TabBar
+          {...props}
+          style={styles.tabBar}
+          tabStyle={styles.tabStyle}
+          indicatorStyle={styles.indicatorStyle}
+          indicatorContainerStyle={styles.indicatorContainerStyle}
+          renderLabel={({ route, focused }) => {
+            const labelColor = focused ? "white" : "black";
+            return (
+              <Text style={[styles.labelStyle, { color: labelColor }]}>
+                {route.title}
+              </Text>
+            );
+          }}
+        />
+      );
+    },
+    [index]
   );
 
   return (
@@ -158,7 +173,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   tabBar: {
-    backgroundColor: "#BDC0BF",
+    backgroundColor: "#CFD4D3",
     borderRadius: 20,
     width: "100%",
     marginBottom: 16,
