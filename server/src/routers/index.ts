@@ -104,14 +104,23 @@ export const router = t.router({
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input: { id } }) => {
       try {
-        await recipesRef
+        const snapshot = await recipesRef
           .orderByChild("id")
           .equalTo(id)
-          .once("value", (snapshot) => {
-            snapshot.forEach((childSnapshot) => {
-              childSnapshot.ref.remove();
-            });
-          });
+          .once("value");
+
+        const snapshotFromDetail = await recipeRef
+          .orderByChild("id")
+          .equalTo(id)
+          .once("value");
+
+        snapshot.forEach((childSnapshot) => {
+          childSnapshot.ref.remove();
+        });
+
+        snapshotFromDetail.forEach((childSnapshot) => {
+          childSnapshot.ref.remove();
+        });
 
         return id;
       } catch (error) {

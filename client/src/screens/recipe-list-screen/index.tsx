@@ -30,11 +30,14 @@ const RecipeListScreen = ({ navigation }: any) => {
     []
   );
   const { data, isLoading, isRefetching, refetch } =
-    trpc.getRecipeList.useQuery({
-      offset,
-      limit,
-      search: searchText,
-    });
+    trpc.getRecipeList.useQuery(
+      {
+        offset,
+        limit,
+        search: searchText,
+      },
+      { keepPreviousData: false }
+    );
   const mutation = trpc.deleteRecipe.useMutation();
 
   const handleDeleteButtonPress = (index: number) =>
@@ -47,13 +50,21 @@ const RecipeListScreen = ({ navigation }: any) => {
       {
         text: "Delete",
         onPress: () => {
-          mutation.mutate({ id: recipeList[index].id });
-
-          setOffset(0);
-          setLimit(LOAD_SIZE);
-          setRecipeList([]);
-          setHasMore(true);
-          refetch();
+          mutation.mutate(
+            { id: recipeList[index].id },
+            {
+              onSuccess: () => {
+                setOffset(0);
+                setLimit(LOAD_SIZE);
+                setRecipeList([]);
+                setHasMore(true);
+                refetch();
+              },
+              onError: (error) => {
+                console.log(error);
+              },
+            }
+          );
         },
         style: "destructive",
       },
@@ -82,9 +93,11 @@ const RecipeListScreen = ({ navigation }: any) => {
   };
 
   const handleContextMenu = (
-    event: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>
+    event: ContextMenuOnPressNativeEvent,
+    index: number
   ) => {
-    const { name, index } = event.nativeEvent;
+    const { name } = event;
+
     switch (name) {
       case "View":
         return navigateToDetail(index);
@@ -145,7 +158,10 @@ const RecipeListScreen = ({ navigation }: any) => {
   }) => {
     return (
       <Pressable onPress={() => navigateToDetail(index)}>
-        <ContextMenu actions={menuItems} onPress={handleContextMenu}>
+        <ContextMenu
+          actions={menuItems}
+          onPress={(event) => handleContextMenu(event.nativeEvent, index)}
+        >
           <RecipeCard recipe={item} />
         </ContextMenu>
       </Pressable>
