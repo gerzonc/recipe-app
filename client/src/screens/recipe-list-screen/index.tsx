@@ -61,6 +61,15 @@ const RecipeListScreen = ({ navigation }: any) => {
     refetch();
   };
 
+  const navigateToDetail = (index: number) => {
+    navigation.navigate("recipe-detail", {
+      id: recipeList[index].id,
+      title: recipeList[index].title,
+      description: recipeList[index].description,
+      image: recipeList[index].image,
+    });
+  };
+
   const handleContextMenu = (
     event: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>
   ) => {
