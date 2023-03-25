@@ -14,23 +14,33 @@ export const router = t.router({
   // Get list of recipes
   getRecipeList: t.procedure
     .input(fetchRecipes)
-    .query(async ({ input: { offset = 0, limit = 15 } }) => {
+    .query(async ({ input: { offset = 0, limit = 15, search } }) => {
       try {
-        const snapshot = await recipesRef
+        let query = recipesRef
           .orderByChild("id")
           .startAt(offset)
-          .limitToFirst(limit)
-          .once("value");
+          .limitToFirst(limit);
+
+        if (search) {
+          query = recipesRef.orderByChild("title");
+        }
+
+        const snapshot = await query.once("value");
 
         const recipes = [];
 
         snapshot.forEach((childSnapshot) => {
           if (recipes.length >= limit) {
-            return true; // Stop iterating
+            return; // Stop iterating
           }
 
-          if (childSnapshot.key && childSnapshot.val()) {
-            recipes.push({ id: childSnapshot.key, ...childSnapshot.val() });
+          const recipe = { id: childSnapshot.key, ...childSnapshot.val() };
+          console.log({ recipe });
+          if (
+            !search ||
+            recipe.title.toLowerCase().includes(search.toLowerCase())
+          ) {
+            recipes.push(recipe);
           }
         });
 
