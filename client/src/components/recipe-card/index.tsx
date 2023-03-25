@@ -18,8 +18,8 @@ const Card: React.FC<CardProps> = ({ recipe }) => {
       />
       <View style={styles.content}>
         <Text style={styles.title}>{recipe.title}</Text>
-        <Text style={styles.description} numberOfLines={2}>
-          {`${recipe.description.slice(0, 60)}...`}
+        <Text style={styles.description} numberOfLines={2} ellipsizeMode="tail">
+          {`${recipe.description}`}
         </Text>
         <View style={styles.info}>
           <Icon name="clock-o" size={20} color="#0D0E0B" />
@@ -34,25 +34,24 @@ const Card: React.FC<CardProps> = ({ recipe }) => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#F4F5F6",
     marginBottom: 12,
     marginHorizontal: 16,
     borderRadius: 15,
-    backgroundColor: "#F4F5F6",
-    alignItems: "center",
     padding: 8,
   },
   image: {
-    width: "100%",
-    height: PixelRatio.roundToNearestPixel(120),
     borderRadius: 15,
+    height: PixelRatio.roundToNearestPixel(120),
+    width: "100%",
   },
   content: {
     padding: 12,
   },
   title: {
     fontSize: 18,
-    fontWeight: "bold",
     marginBottom: 8,
+    fontWeight: "bold",
   },
   description: {
     fontSize: 15,
@@ -63,10 +62,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   time: {
+    marginLeft: 8,
     fontSize: 14,
     color: "#0D0E0B",
     fontWeight: "bold",
-    marginLeft: 8,
   },
 });
 
