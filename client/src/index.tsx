@@ -4,6 +4,7 @@ import { httpBatchLink } from "@trpc/client";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { Platform } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import { RootStack } from "./navigation";
 import { trpc } from "./utils/trpc";
@@ -27,7 +28,9 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <NavigationContainer>
           <StatusBar style={"dark"} />
-          <RootStack />
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <RootStack />
+          </GestureHandlerRootView>
         </NavigationContainer>
       </QueryClientProvider>
     </trpc.Provider>

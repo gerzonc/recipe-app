@@ -1,16 +1,23 @@
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
+  NativeSyntheticEvent,
   SafeAreaView,
   StyleSheet,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { RecipeCard } from "../../components";
 import { Recipe } from "../../types";
 import { LOAD_SIZE } from "../../constants";
 import { trpc } from "../../utils/trpc";
+import { useNavigation } from "@react-navigation/native";
+import ContextMenu, {
+  ContextMenuOnPressNativeEvent,
+} from "react-native-context-menu-view";
+import { menuItems } from "./context-menu";
 
 const RecipeListScreen = () => {
   const [limit, setLimit] = useState(LOAD_SIZE);
@@ -20,6 +27,35 @@ const RecipeListScreen = () => {
   const [recipeList, setRecipeList] = useState<Array<Recipe & { id: number }>>(
     []
   );
+  const navigation = useNavigation<any>();
+
+  const handleDeleteButtonPress = () =>
+    Alert.alert("Delete", "Are you sure you want to delete this recipe?", [
+      {
+        text: "Cancel",
+        onPress: () => {},
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        onPress: () => {},
+        style: "destructive",
+      },
+    ]);
+
+  const handleContextMenu = (
+    event: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>
+  ) => {
+    const { name } = event.nativeEvent;
+    switch (name) {
+      case "View":
+        return navigation.navigate("recipe-detail");
+      case "Edit":
+        return () => {};
+      case "Delete":
+        return handleDeleteButtonPress();
+    }
+  };
 
   const { data, isLoading, refetch } = trpc.getRecipeList.useQuery({
     offset,
@@ -58,11 +94,13 @@ const RecipeListScreen = () => {
     }
   }, [hasMore, isLoading, offset, limit, recipeList.length, total]);
 
-  const renderItem = useMemo(() => {
-    return ({ item }: { item: Recipe & { id: number } }): JSX.Element => {
-      return <RecipeCard recipe={item} />;
-    };
-  }, []);
+  const renderItem = ({ item }: { item: Recipe & { id: number } }) => {
+    return (
+      <ContextMenu actions={menuItems} onPress={handleContextMenu}>
+        <RecipeCard recipe={item} />
+      </ContextMenu>
+    );
+  };
 
   const renderFooter = useCallback(() => {
     if (hasMore && isLoading) {
