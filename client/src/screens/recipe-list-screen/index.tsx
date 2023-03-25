@@ -2,6 +2,7 @@ import {
   ActivityIndicator,
   Alert,
   NativeSyntheticEvent,
+  Pressable,
   SafeAreaView,
   StyleSheet,
   TextInputFocusEventData,
@@ -18,6 +19,7 @@ import { RecipeCard } from "../../components";
 import { Recipe } from "../../types";
 import { LOAD_SIZE } from "../../constants";
 import { trpc } from "../../utils/trpc";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 const RecipeListScreen = ({ navigation }: any) => {
   const [searchText, setSearchText] = useState("");
@@ -61,13 +63,21 @@ const RecipeListScreen = ({ navigation }: any) => {
     refetch();
   };
 
+  const navigateToDetail = (index: number) => {
+    navigation.navigate("recipe-detail", {
+      title: recipeList[index].title,
+      description: recipeList[index].description,
+      image: recipeList[index].image,
+    });
+  };
+
   const handleContextMenu = (
     event: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>
   ) => {
-    const { name } = event.nativeEvent;
+    const { name, index } = event.nativeEvent;
     switch (name) {
       case "View":
-        return navigation.navigate("recipe-detail");
+        return navigateToDetail(index);
       case "Edit":
         return () => {};
       case "Delete":
@@ -116,11 +126,19 @@ const RecipeListScreen = ({ navigation }: any) => {
     }
   }, [hasMore, isLoading, offset, limit, recipeList.length, total]);
 
-  const renderItem = ({ item }: { item: Recipe & { id: number } }) => {
+  const renderItem = ({
+    item,
+    index,
+  }: {
+    item: Recipe & { id: number };
+    index: number;
+  }) => {
     return (
-      <ContextMenu actions={menuItems} onPress={handleContextMenu}>
-        <RecipeCard recipe={item} />
-      </ContextMenu>
+      <Pressable onPress={() => navigateToDetail(index)}>
+        <ContextMenu actions={menuItems} onPress={handleContextMenu}>
+          <RecipeCard recipe={item} />
+        </ContextMenu>
+      </Pressable>
     );
   };
 
