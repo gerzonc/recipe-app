@@ -99,7 +99,7 @@ Everything was created on the server-side, the only part missing was integration
 Forgot to create appealing screens when there is no data on the server when searching or when loading the `RecipeList` screen
 
 ## <a name="caveats"></a> Caveats
-1. Firebase and full-text search
+### 1. Firebase and full-text search
 
 I already explained most of the issues I faced on server-side on my PR's, but just so anyone can have brief context, basically Firebase Realtime DB does not support full-text search, which means that you'll have to either use a third-party (e.g. Algolia, Elastic or Typesense) or create a workaround over this. 
 
