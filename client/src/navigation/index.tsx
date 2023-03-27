@@ -1,5 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
+import { FontAwesome as Icon } from "@expo/vector-icons";
+
 import { SCREENS } from "../constants";
 
 import {

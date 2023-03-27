@@ -5,6 +5,7 @@ import {
   Pressable,
   SafeAreaView,
   StyleSheet,
+  Text,
   TextInputFocusEventData,
   View,
 } from "react-native";
@@ -19,6 +20,8 @@ import { RecipeCard } from "../../components";
 import { Recipe } from "../../types";
 import { LOAD_SIZE } from "../../constants";
 import { trpc } from "../../utils/trpc";
+
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const RecipeListScreen = ({ navigation }: any) => {
   const [searchText, setSearchText] = useState("");
@@ -39,6 +42,7 @@ const RecipeListScreen = ({ navigation }: any) => {
       { keepPreviousData: false }
     );
   const mutation = trpc.deleteRecipe.useMutation();
+  const { top } = useSafeAreaInsets();
 
   const handleDeleteButtonPress = (index: number) =>
     Alert.alert("Delete", "Are you sure you want to delete this recipe?", [
@@ -115,7 +119,7 @@ const RecipeListScreen = ({ navigation }: any) => {
         onCancelButtonPress: handleSearchBarPress,
       },
     });
-  }, [offset, limit, searchText, refetch]);
+  }, []);
 
   useEffect(() => {
     if (data) {
@@ -188,19 +192,20 @@ const RecipeListScreen = ({ navigation }: any) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <FlashList
-        data={recipeList}
-        estimatedItemSize={200}
-        renderItem={renderItem}
-        removeClippedSubviews
-        contentContainerStyle={styles.listContent}
-        keyExtractor={(recipe) => recipe.id.toString()}
-        onEndReached={loadMore}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={renderFooter}
-      />
-    </SafeAreaView>
+    <FlashList
+      data={recipeList}
+      automaticallyAdjustContentInsets
+      removeClippedSubviews
+      decelerationRate="fast"
+      estimatedItemSize={200}
+      contentInsetAdjustmentBehavior="automatic"
+      renderItem={renderItem}
+      contentContainerStyle={styles.listContent}
+      keyExtractor={(recipe) => recipe.id.toString()}
+      onEndReached={loadMore}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={renderFooter}
+    />
   );
 };
 
@@ -211,6 +216,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
+    backgroundColor: "#BDC0BF",
     paddingTop: 16,
   },
   footerContainer: {
