@@ -11,6 +11,7 @@
     "start-client": "cd client && npm start",
     "ios-client": "cd client && npm run ios",
     "android-client": "cd client && npm run android",
-    "web-client": "cd client && npm run web"
+    "web-client": "cd client && npm run web",
+    "install-all": "cd client && npm i && cd ../server && npm i"
   }
 }
